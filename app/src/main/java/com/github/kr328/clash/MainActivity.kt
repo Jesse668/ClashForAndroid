@@ -64,8 +64,6 @@ class MainActivity : BaseActivity<MainDesign>() {
                             startActivity(HelpActivity::class.intent)
                         MainDesign.Request.OpenAbout ->
                             design.showAbout(queryAppVersionName())
-                        MainDesign.Request.OpenHome ->
-                            startActivity(HomeActivity::class.intent)
                     }
                 }
                 if (clashRunning) {
