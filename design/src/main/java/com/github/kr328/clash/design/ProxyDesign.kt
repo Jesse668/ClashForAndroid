@@ -2,8 +2,6 @@ package com.github.kr328.clash.design
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.os.Parcel
-import android.os.Parcelable
 import android.view.View
 import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
@@ -30,7 +28,7 @@ class ProxyDesign(
     overrideMode: TunnelState.Mode?,
     groupNames: List<String>,
     uiStore: UiStore,
-) : Design<ProxyDesign.Request>(context), Parcelable {
+) : Design<ProxyDesign.Request>(context) {
     sealed class Request {
         object ReloadAll : Request()
         object ReLaunch : Request()
@@ -65,15 +63,6 @@ class ProxyDesign(
         }
 
     override val root: View = binding.root
-
-    constructor(parcel: Parcel) : this(
-        TODO("context"),
-        TODO("overrideMode"),
-        TODO("groupNames"),
-        TODO("uiStore")
-    ) {
-        horizontalScrolling = parcel.readByte() != 0.toByte()
-    }
 
     suspend fun updateGroup(
         position: Int,
@@ -200,24 +189,6 @@ class ProxyDesign(
         } else {
             binding.urlTestView.visibility = View.VISIBLE
             binding.urlTestProgressView.visibility = View.GONE
-        }
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeByte(if (horizontalScrolling) 1 else 0)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<ProxyDesign> {
-        override fun createFromParcel(parcel: Parcel): ProxyDesign {
-            return ProxyDesign(parcel)
-        }
-
-        override fun newArray(size: Int): Array<ProxyDesign?> {
-            return arrayOfNulls(size)
         }
     }
 }
