@@ -1,25 +1,24 @@
 package com.github.kr328.clash
 
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import com.github.kr328.clash.common.log.Log
 import com.github.kr328.clash.common.util.intent
 import com.github.kr328.clash.common.util.ticker
-import com.github.kr328.clash.design.MainDesign
+import com.github.kr328.clash.design.*
 import com.github.kr328.clash.design.ui.ToastDuration
 import com.github.kr328.clash.store.TipsStore
-import com.github.kr328.clash.util.startClashService
-import com.github.kr328.clash.util.stopClashService
 import com.github.kr328.clash.util.withClash
 import com.github.kr328.clash.util.withProfile
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
+import com.github.kr328.clash.util.startClashService
+import com.github.kr328.clash.util.stopClashService
+import kotlinx.coroutines.*
 import kotlinx.coroutines.selects.select
-import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
-class MainActivity : BaseActivity<MainDesign>() {
+class HomeActivity : BaseActivity<HomeDesign>() {
     override suspend fun main() {
-        val design = MainDesign(this)
+        val design = HomeDesign(this)
 
         setContentDesign(design)
 
@@ -44,28 +43,34 @@ class MainActivity : BaseActivity<MainDesign>() {
                 }
                 design.requests.onReceive {
                     when (it) {
-                        MainDesign.Request.ToggleStatus -> {
+                        HomeDesign.Request.ShowNodeList -> {
+                            // 获取节点数据
+
+                            Log.e("点击Best Nodes")
+                            startActivity(NodeListActivity::class.intent)
+                        }
+                        HomeDesign.Request.FetchNodeList -> {
+                            // 增加Profile配置， url: http://sub.free88.top/config.yaml
+                            // 显示节点列表
+
+
+
+1
+                        }
+                        HomeDesign.Request.Connect -> {
+                            // 开始连接
                             if (clashRunning)
                                 stopClashService()
                             else
                                 design.startClash()
+                            // 启动clash
+                            Log.e("Start Clash")
+
                         }
-                        MainDesign.Request.OpenProxy ->
-                            startActivity(ProxyActivity::class.intent)
-                        MainDesign.Request.OpenProfiles ->
-                            startActivity(ProfilesActivity::class.intent)
-                        MainDesign.Request.OpenProviders ->
-                            startActivity(ProvidersActivity::class.intent)
-                        MainDesign.Request.OpenLogs ->
-                            startActivity(LogsActivity::class.intent)
-                        MainDesign.Request.OpenSettings ->
-                            startActivity(SettingsActivity::class.intent)
-                        MainDesign.Request.OpenHelp ->
-                            startActivity(HelpActivity::class.intent)
-                        MainDesign.Request.OpenAbout ->
-                            design.showAbout(queryAppVersionName())
-                        MainDesign.Request.OpenHome ->
-                            startActivity(HomeActivity::class.intent)
+                        HomeDesign.Request.ShowSetting -> {
+                            Log.e("进入clash主界面")
+                            startActivity(MainActivity::class.intent)
+                        }
                     }
                 }
                 if (clashRunning) {
@@ -77,7 +82,7 @@ class MainActivity : BaseActivity<MainDesign>() {
         }
     }
 
-    private suspend fun showUpdatedTips(design: MainDesign) {
+    private suspend fun showUpdatedTips(design: HomeDesign) {
         val tips = TipsStore(this)
 
         if (tips.primaryVersion != TipsStore.CURRENT_PRIMARY_VERSION) {
@@ -91,7 +96,7 @@ class MainActivity : BaseActivity<MainDesign>() {
         }
     }
 
-    private suspend fun MainDesign.fetch() {
+    private suspend fun HomeDesign.fetch() {
         setClashRunning(clashRunning)
 
         val state = withClash {
@@ -109,18 +114,18 @@ class MainActivity : BaseActivity<MainDesign>() {
         }
     }
 
-    private suspend fun MainDesign.fetchTraffic() {
+    private suspend fun HomeDesign.fetchTraffic() {
         withClash {
             setForwarded(queryTrafficTotal())
         }
     }
 
-    private suspend fun MainDesign.startClash() {
+    private suspend fun HomeDesign.startClash() {
         val active = withProfile { queryActive() }
 
         if (active == null || !active.imported) {
-            showToast(R.string.no_profile_selected, ToastDuration.Long) {
-                setAction(R.string.profiles) {
+            showToast(com.github.kr328.clash.design.R.string.no_profile_selected, ToastDuration.Long) {
+                setAction(com.github.kr328.clash.design.R.string.profiles) {
                     startActivity(ProfilesActivity::class.intent)
                 }
             }
@@ -137,17 +142,11 @@ class MainActivity : BaseActivity<MainDesign>() {
                     vpnRequest
                 )
 
-                if (result.resultCode == RESULT_OK)
+                if (result.resultCode == AppCompatActivity.RESULT_OK)
                     startClashService()
             }
         } catch (e: Exception) {
-            design?.showToast(R.string.unable_to_start_vpn, ToastDuration.Long)
-        }
-    }
-
-    private suspend fun queryAppVersionName(): String {
-        return withContext(Dispatchers.IO) {
-            packageManager.getPackageInfo(packageName, 0).versionName
+            design?.showToast(com.github.kr328.clash.design.R.string.unable_to_start_vpn, ToastDuration.Long)
         }
     }
 }

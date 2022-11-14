@@ -217,4 +217,11 @@
     <string name="allow_bypass">允许应用绕过</string>
     <string name="allow_bypass_summary">允许其他应用绕过 VPN</string>
     <string name="sniff_tls_sni">嗅探 TLS 的 SNI</string>
+
+    <string name="open_home">首页</string>
+    <string name="click_to_connect">点击连接</string>
+    <string name="connecting">正在连接中...</string>
+    <string name="connected">已高速连接</string>
+    <string name="best_node">最佳线路</string>
+    <string name="vip_node_list">VIP 线路</string>
 </resources>

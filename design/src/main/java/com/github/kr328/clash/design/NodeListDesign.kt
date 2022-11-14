@@ -1,56 +1,49 @@
 package com.github.kr328.clash.design
 
 import android.content.Context
-import android.content.res.ColorStateList
-import android.os.Parcel
-import android.os.Parcelable
 import android.view.View
-import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.viewpager2.widget.ViewPager2
 import com.github.kr328.clash.core.model.Proxy
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.design.adapter.ProxyAdapter
 import com.github.kr328.clash.design.adapter.ProxyPageAdapter
-import com.github.kr328.clash.design.component.ProxyMenu
 import com.github.kr328.clash.design.component.ProxyViewConfig
-import com.github.kr328.clash.design.databinding.DesignProxyBinding
+import com.github.kr328.clash.design.databinding.DesignNodeListBinding
 import com.github.kr328.clash.design.model.ProxyState
 import com.github.kr328.clash.design.store.UiStore
 import com.github.kr328.clash.design.util.applyFrom
 import com.github.kr328.clash.design.util.layoutInflater
-import com.github.kr328.clash.design.util.resolveThemedColor
 import com.github.kr328.clash.design.util.root
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.github.kr328.clash.service.model.Profile
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ProxyDesign(
-    context: Context,
-    overrideMode: TunnelState.Mode?,
-    groupNames: List<String>,
-    uiStore: UiStore,
-) : Design<ProxyDesign.Request>(context), Parcelable {
+class NodeListDesign(context: Context,
+                     overrideMode: TunnelState.Mode?,
+                     groupNames: List<String>,
+                     uiStore: UiStore,
+) : Design<NodeListDesign.Request>(context) {
     sealed class Request {
-        object ReloadAll : Request()
-        object ReLaunch : Request()
-
-        data class PatchMode(val mode: TunnelState.Mode?) : Request()
-        data class Reload(val index: Int) : Request()
-        data class Select(val index: Int, val name: String) : Request()
+        data class FetchNodeList(val index: Int) : Request()
+        data class SelectNode(val index: Int, val name: String) : Request()
         data class UrlTest(val index: Int) : Request()
     }
 
-    private val binding = DesignProxyBinding
+    private val binding = DesignNodeListBinding
         .inflate(context.layoutInflater, context.root, false)
 
     private val config = ProxyViewConfig(context, uiStore.proxySingleLine)
 
-    private val menu: ProxyMenu by lazy {
-        ProxyMenu(context, binding.menuView, overrideMode, uiStore, requests) {
-            config.singleLine = uiStore.proxySingleLine
+    override val root: View
+        get() = binding.root
+
+    var profile: Profile
+        get() = binding.profile!!
+        set(value) {
+            binding.profile = value
         }
-    }
 
     private val adapter: ProxyPageAdapter
         get() = binding.pagesView.adapter!! as ProxyPageAdapter
@@ -63,17 +56,6 @@ class ProxyDesign(
         set(value) {
             adapter.states[binding.pagesView.currentItem].urlTesting = value
         }
-
-    override val root: View = binding.root
-
-    constructor(parcel: Parcel) : this(
-        TODO("context"),
-        TODO("overrideMode"),
-        TODO("groupNames"),
-        TODO("uiStore")
-    ) {
-        horizontalScrolling = parcel.readByte() != 0.toByte()
-    }
 
     suspend fun updateGroup(
         position: Int,
@@ -95,25 +77,19 @@ class ProxyDesign(
         }
     }
 
-    suspend fun requestDonate() {
-        withContext(Dispatchers.Main) {
-            val title = context.getText(R.string.request_donate)
-            val message = context.getText(R.string.request_donate_tips)
+    private fun showMenu(profile: Profile) {
 
-            if (title.isNotEmpty() && message.isNotEmpty()) {
-                MaterialAlertDialogBuilder(context)
-                    .setTitle(R.string.request_donate)
-                    .setMessage(R.string.request_donate_tips)
-                    .setPositiveButton(R.string.ok) { _, _ -> }
-                    .setCancelable(true)
-                    .show()
-            }
-        }
     }
 
-    suspend fun showModeSwitchTips() {
+    suspend fun showAbout(versionName: String) {
         withContext(Dispatchers.Main) {
-            Toast.makeText(context, R.string.mode_switch_tips, Toast.LENGTH_LONG).show()
+            val binding = DesignNodeListBinding.inflate(context.layoutInflater).apply {
+                //this.versionName = versionName
+            }
+
+            AlertDialog.Builder(context)
+                .setView(binding.root)
+                .show()
         }
     }
 
@@ -122,10 +98,6 @@ class ProxyDesign(
 
         binding.activityBarLayout.applyFrom(context)
 
-        binding.menuView.setOnClickListener {
-            menu.show()
-        }
-
         if (groupNames.isEmpty()) {
             binding.emptyView.visibility = View.VISIBLE
 
@@ -133,11 +105,11 @@ class ProxyDesign(
             binding.tabLayoutView.visibility = View.GONE
             binding.elevationView.visibility = View.GONE
             binding.pagesView.visibility = View.GONE
-            binding.urlTestFloatView.visibility = View.GONE
+            //binding.urlTestFloatView.visibility = View.GONE
         } else {
-            binding.urlTestFloatView.supportImageTintList = ColorStateList.valueOf(
+            /*binding.urlTestFloatView.supportImageTintList = ColorStateList.valueOf(
                 context.resolveThemedColor(R.attr.colorOnPrimary)
-            )
+            )*/
 
             binding.pagesView.apply {
                 adapter = ProxyPageAdapter(
@@ -145,7 +117,7 @@ class ProxyDesign(
                     config,
                     List(groupNames.size) { index ->
                         ProxyAdapter(config) { name ->
-                            requests.trySend(Request.Select(index, name))
+                            requests.trySend(Request.SelectNode(0, name))
                         }
                     }
                 ) {
@@ -189,9 +161,9 @@ class ProxyDesign(
 
     private fun updateUrlTestButtonStatus() {
         if (verticalBottomScrolled || horizontalScrolling || urlTesting) {
-            binding.urlTestFloatView.hide()
+            //binding.urlTestFloatView.hide()
         } else {
-            binding.urlTestFloatView.show()
+            //binding.urlTestFloatView.show()
         }
 
         if (urlTesting) {
@@ -200,24 +172,6 @@ class ProxyDesign(
         } else {
             binding.urlTestView.visibility = View.VISIBLE
             binding.urlTestProgressView.visibility = View.GONE
-        }
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeByte(if (horizontalScrolling) 1 else 0)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<ProxyDesign> {
-        override fun createFromParcel(parcel: Parcel): ProxyDesign {
-            return ProxyDesign(parcel)
-        }
-
-        override fun newArray(size: Int): Array<ProxyDesign?> {
-            return arrayOfNulls(size)
         }
     }
 }

@@ -38,7 +38,7 @@
             android:value="@integer/release_code" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".HomeActivity"
             android:configChanges="uiMode"
             android:exported="true"
             android:label="@string/launch_name"
@@ -151,6 +151,17 @@
             android:configChanges="uiMode"
             android:exported="false"
             android:label="@string/files" />
+
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:label="@string/open_home" />
+        <activity
+            android:name=".NodeListActivity"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:label="@string/open_home" />
 
         <service
             android:name=".LogcatService"

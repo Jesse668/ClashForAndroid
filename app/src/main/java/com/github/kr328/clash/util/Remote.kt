@@ -14,11 +14,11 @@ suspend fun <T> withClash(
     block: suspend IClashManager.() -> T
 ): T {
     while (true) {
-        val remote = Remote.service.remote.get()
-        val client = remote.clash()
+                val remote = Remote.service.remote.get()
+                val client = remote.clash()
 
-        try {
-            return withContext(context) { client.block() }
+                try {
+                    return withContext(context) { client.block() }
         } catch (e: DeadObjectException) {
             Log.w("Remote services panic")
 

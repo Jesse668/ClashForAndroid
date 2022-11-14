@@ -58,6 +58,7 @@ class ProfilesActivity : BaseActivity<ProfilesDesign>() {
 
                             startActivity(PropertiesActivity::class.intent.setUUID(uuid))
                         }
+                        else -> {}
                     }
                 }
                 if (activityStarted) {
