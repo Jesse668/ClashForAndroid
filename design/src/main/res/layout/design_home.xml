@@ -74,7 +74,7 @@
                             android:layout_width="@dimen/main_logo_size"
                             android:layout_height="@dimen/main_logo_size"
                             android:layout_gravity="center"
-                            android:background="@drawable/ic_clash"
+                            android:background="@drawable/ic_baseline_adb"
                             android:backgroundTint="?attr/colorLogo" />
                     </FrameLayout>
 
@@ -86,7 +86,7 @@
                 </LinearLayout>
 
                 <com.github.kr328.clash.design.view.LargeActionCard2
-                    android:layout_width="300dp"
+                    android:layout_width="260dp"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="10dp"
                     android:layout_gravity="center_horizontal"
