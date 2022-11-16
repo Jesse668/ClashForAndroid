@@ -6,7 +6,7 @@
     <string name="access_control_packages">存取控制應用程式套件清單</string>
     <string name="append_system_dns">附加作業系統 DNS</string>
     <string name="application_broken">應用程式損毀</string>
-    <string name="application_name">Clash for Android</string>
+    <string name="application_name">FreeGate for Android</string>
     <string name="auto_update">自動更新</string>
     <string name="behavior">行為</string>
     <string name="bypass_private_network">略過私有網路</string>

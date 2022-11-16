@@ -2,25 +2,32 @@ package com.github.kr328.clash.design
 
 import android.content.Context
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import com.github.kr328.clash.core.model.FetchStatus
 import com.github.kr328.clash.core.model.TunnelState
 import com.github.kr328.clash.core.util.trafficTotal
 import com.github.kr328.clash.design.databinding.DesignHomeBinding
+import com.github.kr328.clash.design.dialog.withModelProgressBar
+import com.github.kr328.clash.design.ui.ToastDuration
 import com.github.kr328.clash.design.util.layoutInflater
 import com.github.kr328.clash.design.util.resolveThemedColor
 import com.github.kr328.clash.design.util.root
+import com.github.kr328.clash.design.util.showExceptionToast
 import com.github.kr328.clash.service.model.Profile
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HomeDesign(context: Context) : Design<HomeDesign.Request>(context) {
     sealed class Request {
         object FetchNodeList : Request()
-        object ShowNodeList : Request()
         object ShowSetting : Request()
         object Connect : Request()
+        object AddDefault : Request()
 
-        data class Active(val profile: Profile) : ProfilesDesign.Request()
+        //data class Active(val profile: Profile) : ProfilesDesign.Request()
     }
 
     private val binding = DesignHomeBinding
@@ -29,16 +36,16 @@ class HomeDesign(context: Context) : Design<HomeDesign.Request>(context) {
     override val root: View
         get() = binding.root
 
-    /*var profile: Profile
+    var profile: Profile
         get() = binding.profile!!
         set(value) {
             binding.profile = value
-        }*/
+        }
 
-    /*val progressing: Boolean
+    val progressing: Boolean
         get() = binding.hasPendingBindings()
 
-    private val adapter = ProfileAdapter(context, this::requestActive, this::showMenu)
+    /*private val adapter = ProfileAdapter(context, this::requestActive, this::showMenu)
 
     suspend fun patchProfiles(profiles: List<Profile>) {
         adapter.apply {
@@ -52,6 +59,10 @@ class HomeDesign(context: Context) : Design<HomeDesign.Request>(context) {
         withContext(Dispatchers.Main) {
             //binding.updateView.visibility = if (updatable) View.VISIBLE else View.GONE
         }
+    }*/
+
+    suspend fun setProfileInfo(name: String, url: String, interval: Long) {
+        profile = profile.copy(name = name, source = url, interval = interval)
     }
 
     suspend fun withProcessing(executeTask: suspend (suspend (FetchStatus) -> Unit) -> Unit) {
@@ -75,7 +86,7 @@ class HomeDesign(context: Context) : Design<HomeDesign.Request>(context) {
         }
     }
 
-    private fun requestActive(profile: Profile) {
+    /*private fun requestActive(profile: Profile) {
         //requests.trySend(Request.Active(profile))
     }
 
@@ -140,6 +151,9 @@ class HomeDesign(context: Context) : Design<HomeDesign.Request>(context) {
                 .show()
         }
     }
+
+
+
 
     init {
         binding.self = this

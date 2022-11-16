@@ -33,6 +33,8 @@
     <dimen name="large_item_header_layout_size">70dp</dimen>
     <dimen name="large_item_tailing_margin_horizontal">20dp</dimen>
     <dimen name="large_item_text_margin">5dp</dimen>
+    <dimen name="large_item_icon_component_size">250dp</dimen>
+
 
     <!--  Common Item  -->
     <dimen name="item_min_height">75dp</dimen>

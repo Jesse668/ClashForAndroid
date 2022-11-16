@@ -6,7 +6,7 @@
     <string name="access_control_packages">访问控制应用包列表</string>
     <string name="append_system_dns">追加系统 DNS</string>
     <string name="application_broken">应用损坏</string>
-    <string name="application_name">Clash for Android</string>
+    <string name="application_name">FreeGate for Android</string>
     <string name="auto_update">自动更新</string>
     <string name="behavior">行为</string>
     <string name="bypass_private_network">绕过私有网络</string>
@@ -61,13 +61,13 @@
     <string name="route_system_traffic">自动路由系统流量</string>
     <string name="routing_via_vpn_service">通过 VpnService 自动路由所有系统流量</string>
     <string name="rule_mode">规则模式</string>
-    <string name="running">运行中</string>
+    <string name="running">已高速连接</string>
     <string name="settings">设置</string>
     <string name="show_traffic">显示流量</string>
     <string name="show_traffic_summary">在通知中自动刷新流量</string>
     <string name="allow_clash_auto_restart">允许 Clash 自动重启</string>
     <string name="auto_restart">自动重启</string>
-    <string name="stopped">已停止</string>
+    <string name="stopped">点击连接</string>
     <string name="help">帮助</string>
     <string name="tap_to_start">点此启动</string>
     <string name="update">更新</string>

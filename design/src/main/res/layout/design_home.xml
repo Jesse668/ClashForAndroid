@@ -27,6 +27,13 @@
             name="hasProviders"
             type="boolean" />
 
+        <variable
+            name="profile"
+            type="com.github.kr328.clash.service.model.Profile" />
+        <variable
+            name="processing"
+            type="boolean" />
+
         <import type="android.view.View" />
         <import type="com.github.kr328.clash.design.HomeDesign.Request" />
     </data>
@@ -78,10 +85,11 @@
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
                 </LinearLayout>
 
-                <com.github.kr328.clash.design.view.LargeActionCard
-                    android:layout_width="match_parent"
+                <com.github.kr328.clash.design.view.LargeActionCard2
+                    android:layout_width="300dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/main_card_margin_vertical"
+                    android:layout_marginVertical="10dp"
+                    android:layout_gravity="center_horizontal"
                     android:onClick="@{() -> self.requests.offer(Request.Connect.INSTANCE)}"
                     android:theme="@style/AppThemeDark"
                     app:cardBackgroundColor="@{clashRunning ? colorClashStarted : colorClashStopped}"
@@ -89,28 +97,47 @@
                     app:subtext="@{clashRunning ? @string/format_traffic_forwarded(forwarded) : @string/tap_to_start}"
                     app:text="@{clashRunning ? @string/running : @string/stopped}" />
 
-                <com.github.kr328.clash.design.view.LargeActionLabel
+                <com.github.kr328.clash.design.view.ActionLabel
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="@dimen/main_label_margin_vertical"
                     android:onClick="@{() -> self.requests.offer(Request.ShowSetting.INSTANCE)}"
-                    app:icon="@drawable/ic_baseline_more_vert"
                     app:text="@string/settings" />
+
+                <!--<com.github.kr328.clash.design.view.LargeActionLabel
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/main_label_margin_vertical"
+                    android:onClick="@{() -> self.requests.offer(Request.AddDefault.INSTANCE)}"
+                    app:icon="@drawable/ic_baseline_more_vert"
+                    app:text="添加默认配置（测试）" />-->
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="?attr/colorControlHighlight" />
 
-                <TextView
+                <!--<TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingVertical="@dimen/item_padding_vertical"
                     android:paddingStart="@{@dimen/item_header_component_size + @dimen/item_header_margin * 2}"
                     android:paddingEnd="@dimen/item_tailing_margin"
                     android:text="@string/best_node"
-                    android:onClick="@{() -> self.requests.offer(Request.ShowNodeList.INSTANCE)}"
-                    android:textColor="?attr/colorControlActivated" />
+                    android:onClick="@{() -> self.requests.offer(Request.FetchNodeList.INSTANCE)}"
+                    android:textColor="?attr/colorControlActivated" />-->
+
+                <com.github.kr328.clash.design.view.LargeActionCard
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/main_card_margin_vertical"
+                    android:onClick="@{() -> self.requests.offer(Request.FetchNodeList.INSTANCE)}"
+                    android:visibility="@{clashRunning ? View.VISIBLE : View.GONE}"
+                    app:icon="@drawable/ic_baseline_apps"
+                    app:subtext="@{mode}"
+                    app:text="@string/best_node" />
+
+
 
             </LinearLayout>
         </ScrollView>
