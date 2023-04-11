@@ -177,8 +177,7 @@ class HomeActivity : BaseActivity<HomeDesign>() {
         return withProfile {
             var uuid: UUID
             val original: Profile?
-            //var url = "https://suo.yt/PTLF531"
-            var url = "http://sub.free88.top/ychn66"
+            var url = "https://sub.free88.top/dWaExU_clash"
             var name = "test999"
 
             var profiles = queryAll()
