@@ -60,7 +60,8 @@ class HomeActivity : BaseActivity<HomeDesign>() {
                             //design.verifyAndCommit()
                             Log.e("点击Best Nodes")
                             if (clashRunning)
-                                startActivity(NodeListActivity::class.intent)
+                                //startActivity(NodeListActivity::class.intent)
+                                startActivity(ProxyActivity::class.intent)
                             else {
                                 Log.e("Need start FreeGate first")
                             }
